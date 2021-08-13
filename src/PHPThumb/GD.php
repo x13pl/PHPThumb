@@ -105,6 +105,20 @@ class GD extends PHPThumb
                 $this->oldImage = imagecreatefromstring($this->fileName);
                 break;
         }
+        
+        $orientation = @exif_read_data($this->fileName)['Orientation'] ?: 0;
+
+        switch ($orientation) {
+            case 3:
+                $this->oldImage = imagerotate($this->oldImage, 180, 0);
+                break;
+            case 6:
+                $this->oldImage = imagerotate($this->oldImage, -90, 0);
+                break;
+            case 8:
+                $this->oldImage = imagerotate($this->oldImage, 90, 0);
+                break;
+        }
 
         $this->currentDimensions = array (
             'width'  => imagesx($this->oldImage),
